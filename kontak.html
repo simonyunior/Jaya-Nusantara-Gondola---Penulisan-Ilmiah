@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kontak Kami - Jaya Nusantara Gondola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 2rem; }
+    h1 { color: #003366; }
+    form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+    input, textarea { padding: 0.75rem; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
+    button {
+      padding: 0.75rem;
+      background-color: #005599;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover { background-color: #003366; }
+  </style>
+</head>
+<body>
+  <h1>Hubungi Kami</h1>
+  <p>Silakan isi formulir di bawah ini untuk menghubungi tim kami:</p>
+
+  <form onsubmit="submitKontak(event)">
+    <input type="text" id="nama" placeholder="Nama Anda" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <textarea id="pesan" placeholder="Pesan Anda" rows="5" required></textarea>
+    <button type="submit">Kirim Pesan</button>
+  </form>
+
+  <script>
+    function submitKontak(e) {
+      e.preventDefault();
+      alert("Pesan berhasil dikirim. Terima kasih!");
+      e.target.reset();
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html

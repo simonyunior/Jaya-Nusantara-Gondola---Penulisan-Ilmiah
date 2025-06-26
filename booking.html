@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Gondola - Jaya Nusantara Gondola</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 700px; margin: auto; }
+    h1 { color: #003366; }
+    form { display: flex; flex-direction: column; gap: 1rem; }
+    label { font-weight: bold; }
+    input, select, textarea { padding: 0.5rem; font-size: 1rem; }
+    button { padding: 0.75rem; background-color: #005599; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+    button:hover { background-color: #003366; }
+  </style>
+</head>
+<body>
+  <h1>Form Pemesanan Gondola</h1>
+  <p>Silakan isi formulir di bawah ini untuk melakukan pemesanan gondola.</p>
+
+  <form onsubmit="kirimBooking(event)">
+    <label for="nama">Nama Lengkap:</label>
+    <input type="text" id="nama" name="nama" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="telepon">Nomor Telepon:</label>
+    <input type="tel" id="telepon" name="telepon" required>
+
+    <label for="jenis">Jenis Gondola:</label>
+    <select id="jenis" name="jenis">
+      <option value="elektrik">Gondola Elektrik</option>
+      <option value="manual">Gondola Manual</option>
+      <option value="modular">Gondola Modular</option>
+    </select>
+
+    <label for="tanggal">Tanggal Pemakaian:</label>
+    <input type="date" id="tanggal" name="tanggal" required>
+
+    <label for="lokasi">Lokasi Proyek:</label>
+    <input type="text" id="lokasi" name="lokasi" required>
+
+    <label for="catatan">Catatan Tambahan:</label>
+    <textarea id="catatan" name="catatan" rows="4"></textarea>
+
+    <button type="submit">Kirim Pemesanan</button>
+  </form>
+  <script>
+function kirimBooking(e) {
+  e.preventDefault();
+
+  const bookingId = "BOOK" + Date.now();
+  const booking = {
+    id: bookingId,
+    nama: document.getElementById("nama").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    telepon: document.getElementById("telepon").value.trim(),
+    jenis: document.getElementById("jenis").value,
+    tanggal: document.getElementById("tanggal").value,
+    lokasi: document.getElementById("lokasi").value.trim(),
+    catatan: document.getElementById("catatan").value.trim(),
+    status: "Menunggu"
+  };
+
+  let bookings = JSON.parse(localStorage.getItem("bookingList") || "[]");
+  bookings.push(booking);
+  localStorage.setItem("bookingList", JSON.stringify(bookings));
+
+  alert("Booking berhasil!\nID Anda: " + bookingId);
+  window.location.href = `cek-status.html?id=${bookingId}`;
+}
+
+</script>
+
+</body>
+</html>

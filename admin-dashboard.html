@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Jaya Nusantara Gondola</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
+    .dashboard { padding: 2rem; }
+    h1 { color: #003366; }
+    nav a {
+      margin-right: 1rem;
+      color: #005599;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .section {
+      background: white; padding: 1rem; border-radius: 8px;
+      margin-top: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .form-group { margin-bottom: 1rem; }
+    label { font-weight: bold; display: block; margin-bottom: 0.5rem; }
+    input, textarea, select { padding: 0.5rem; width: 100%; }
+    button { margin-top: 0.5rem; padding: 0.5rem 1rem; }
+    ul { padding-left: 1.2rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h1>Dashboard Admin</h1>
+    <nav>
+      <a href="#" onclick="showSection('stok')">Stok</a>
+      <a href="#" onclick="showSection('testimoni')">Testimoni</a>
+      <a href="#" onclick="showSection('booking')">Booking</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+
+    <div id="stok" class="section">
+      <h2>Kelola Stok Produk</h2>
+      <div class="form-group">
+        <label>Gondola Elektrik</label>
+        <input type="number" id="stok-elektrik" />
+      </div>
+      <div class="form-group">
+        <label>Gondola Manual</label>
+        <input type="number" id="stok-manual" />
+      </div>
+      <div class="form-group">
+        <label>Gondola Modular</label>
+        <input type="number" id="stok-modular" />
+      </div>
+      <button onclick="simpanSemuaStok()">💾 Simpan Semua Stok</button>
+    </div>
+
+    <div id="testimoni" class="section" style="display:none;">
+      <h2>Kelola Testimoni</h2>
+      <div class="form-group">
+        <textarea id="testimoniInput" placeholder="Tambahkan testimoni baru..."></textarea>
+        <button onclick="tambahTestimoni()">Tambah</button>
+      </div>
+      <ul id="testimoniList"></ul>
+    </div>
+
+    <div id="booking" class="section" style="display:none;">
+      <h2>Data Booking</h2>
+      <div class="form-group">
+        <input type="text" id="namaBooking" placeholder="Nama Klien" />
+        <input type="text" id="jenisBooking" placeholder="Jenis Gondola" />
+        <input type="date" id="tanggalBooking" />
+        <button onclick="tambahBooking()">Tambah Booking</button>
+      </div>
+      <ul id="bookingList"></ul>
+    </div>
+  </div>
+
+  <script>
+    if (!localStorage.getItem("loggedIn")) {
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    }
+
+    function showSection(id) {
+      ["stok", "testimoni", "booking"].forEach(sec => {
+        document.getElementById(sec).style.display = (sec === id) ? "block" : "none";
+      });
+    }
+
+    function simpanSemuaStok() {
+      localStorage.setItem("stok-elektrik", document.getElementById("stok-elektrik").value);
+      localStorage.setItem("stok-manual", document.getElementById("stok-manual").value);
+      localStorage.setItem("stok-modular", document.getElementById("stok-modular").value);
+      alert("Semua stok berhasil disimpan.");
+    }
+
+    function loadStok() {
+      ["elektrik", "manual", "modular"].forEach(type => {
+        document.getElementById("stok-" + type).value = localStorage.getItem("stok-" + type) || 0;
+      });
+    }
+
+    function tambahTestimoni() {
+      const text = document.getElementById("testimoniInput").value.trim();
+      if (!text) return;
+      let data = JSON.parse(localStorage.getItem("testimoniList") || "[]");
+      data.push(text);
+      localStorage.setItem("testimoniList", JSON.stringify(data));
+      document.getElementById("testimoniInput").value = "";
+      tampilkanTestimoni();
+    }
+
+    function hapusTestimoni(index) {
+      let data = JSON.parse(localStorage.getItem("testimoniPending") || "[]");
+      data.splice(index, 1);
+      localStorage.setItem("testimoniPending", JSON.stringify(data));
+      tampilkanTestimoni();
+    }
+
+    function tampilkanTestimoni() {
+      const data = JSON.parse(localStorage.getItem("testimoniPending") || "[]");
+      const list = document.getElementById("testimoniList");
+      list.innerHTML = "";
+      data.forEach((t, i) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
+          <p>"${t.isi}" - <strong>${t.nama}</strong></p>
+          <button onclick="hapusTestimoni(${i})">Hapus</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function tambahBooking() {
+      const nama = document.getElementById("namaBooking").value.trim();
+      const jenis = document.getElementById("jenisBooking").value.trim();
+      const tanggal = document.getElementById("tanggalBooking").value;
+      if (!nama || !jenis || !tanggal) return alert("Isi semua field");
+      let data = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      data.push({ nama, jenis, tanggal, status: "Menunggu", lokasi: "", telepon: "", catatan: "" });
+      localStorage.setItem("bookingList", JSON.stringify(data));
+      document.getElementById("namaBooking").value = "";
+      document.getElementById("jenisBooking").value = "";
+      document.getElementById("tanggalBooking").value = "";
+      tampilkanBooking();
+    }
+
+    function hapusBooking(index) {
+      let data = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      data.splice(index, 1);
+      localStorage.setItem("bookingList", JSON.stringify(data));
+      tampilkanBooking();
+    }
+
+    function prosesBooking(index) {
+      let data = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      data[index].status = "Selesai";
+      localStorage.setItem("bookingList", JSON.stringify(data));
+      alert("Booking berhasil diproses.");
+      tampilkanBooking();
+    }
+
+    function tampilkanBooking() {
+      const list = document.getElementById("bookingList");
+      list.innerHTML = "";
+      let data = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      data.forEach((b, i) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
+          <strong>${b.nama}</strong> - ${b.jenis} - ${b.tanggal} - <em>${b.status}</em>
+          <br>Lokasi: ${b.lokasi || '-' } | Telepon: ${b.telepon || '-' }
+          <br>Catatan: ${b.catatan || '-' }
+          <br>
+          ${b.status === "Menunggu" 
+            ? `<button onclick="prosesBooking(${i})">Proses</button>` 
+            : `<span style="color:green">✅ Selesai</span>`}
+          <button onclick="hapusBooking(${i})">Hapus</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    loadStok();
+    tampilkanTestimoni();
+    tampilkanBooking();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produk - Jaya Nusantara Gondola</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    h1 { color: #003366; }
+    .produk-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+    .produk-item { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; }
+    .produk-item img { width: 100%; border-radius: 4px; }
+    .filter { margin-bottom: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Daftar Gondola</h1>
+
+  <div class="filter">
+    <label for="jenis">Filter berdasarkan jenis:</label>
+    <select id="jenis">
+      <option value="semua">Semua</option>
+      <option value="elektrik">Elektrik</option>
+      <option value="manual">Manual</option>
+      <option value="modular">Modular</option>
+    </select>
+  </div>
+
+  <div class="produk-list" id="produkContainer">
+  </div>
+
+  <script>
+    const semuaProduk = [
+      {
+        id: "elektrik",
+        nama: "Gondola Elektrik A",
+        deskripsi: "Gondola dengan sistem motor elektrik untuk pekerjaan gedung tinggi.",
+        gambar: "gambar/geletrik.png"
+      },
+      {
+        id: "manual",
+        nama: "Gondola Manual B",
+        deskripsi: "Cocok untuk proyek skala kecil dan fleksibel dalam penggunaan.",
+        gambar: "gambar/gmanual.jpg"
+      },
+      {
+        id: "modular",
+        nama: "Gondola Modular C",
+        deskripsi: "Desain modular yang dapat disesuaikan dengan bentuk fasad bangunan.",
+        gambar: "gambar/gmodular.png"
+      }
+    ];
+
+    function tampilkanProduk(jenis = "semua") {
+      const container = document.getElementById("produkContainer");
+      container.innerHTML = "";
+
+      const hasil = jenis === "semua"
+        ? semuaProduk
+        : semuaProduk.filter(p => p.id === jenis);
+
+      hasil.forEach(p => {
+        const stok = localStorage.getItem("stok-" + p.id) || "0";
+        const item = document.createElement("div");
+        item.className = "produk-item";
+        item.innerHTML = `
+          <img src="${p.gambar}" alt="${p.nama}">
+          <h3>${p.nama}</h3>
+          <p>${p.deskripsi}</p>
+          <p><strong>Stok:</strong> ${stok}</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    document.getElementById("jenis").addEventListener("change", function () {
+      tampilkanProduk(this.value);
+    });
+
+    tampilkanProduk();
+  </script>
+</body>
+</html>

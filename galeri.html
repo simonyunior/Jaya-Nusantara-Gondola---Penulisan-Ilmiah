@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Proyek - Jaya Nusantara Gondola</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; background-color: #f4f4f4; }
+    h1 { color: #003366; text-align: center; margin-bottom: 2rem; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card img {
+      width: 100%; height: 200px; object-fit: cover;
+    }
+    .card .desc {
+      padding: 1rem;
+    }
+    .card .desc h3 { margin: 0 0 0.5rem; color: #005599; }
+    .card .desc p { font-size: 0.95rem; color: #333; }
+  </style>
+</head>
+<body>
+  <h1>Galeri Proyek Kami</h1>
+  <div class="gallery">
+    <div class="card">
+      <img src="gambar/galeri1.jpg" alt="Proyek Gedung A">
+      <div class="desc">
+        <h3>Gedung A - Jakarta</h3>
+        <p>Instalasi gondola untuk gedung perkantoran 20 lantai. Pengerjaan selesai dalam 2 minggu.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="gambar/galerimall.jpg" alt="Mall B">
+      <div class="desc">
+        <h3>Mall B - Tangerang</h3>
+        <p>Proyek pemeliharaan fasad mall menggunakan gondola tipe gantung modular.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="gambar/galeri3.webp" alt="RS C">
+      <div class="desc">
+        <h3>Rumah Sakit C - Bekasi</h3>
+        <p>Pekerjaan pembersihan eksterior rumah sakit dengan gondola lipat semi-permanen.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

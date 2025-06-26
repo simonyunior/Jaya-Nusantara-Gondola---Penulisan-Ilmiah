@@ -1,0 +1,58 @@
+ body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #005599;
+      gap: 2rem;
+      padding: 1rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .hero {
+      background-image: url('https://via.placeholder.com/1200x400?text=Jaya+Nusantara+Gondola');
+      background-size: cover;
+      background-position: center;
+      background-color: #eee;
+      color: black;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3rem;
+    }
+    .hero p {
+      font-size: 1.25rem;
+    }
+    .section {
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    footer {
+      background-color: #003366;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    .button {
+      display: inline-block;
+      background-color: #0077cc;
+      color: white;
+      padding: 1rem 2rem;
+      margin-top: 1rem;
+      text-decoration: none;
+      border-radius: 5px;
+    }

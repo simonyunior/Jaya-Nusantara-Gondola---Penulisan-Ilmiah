@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kirim Testimoni</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; max-width: 600px; margin: auto; }
+    textarea { width: 100%; height: 100px; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>Kirim Testimoni</h2>
+  <form onsubmit="submitTestimoni(event)">
+    <input type="text" id="nama" placeholder="Nama Anda" required /><br><br>
+    <textarea id="isi" placeholder="Tulis testimoni Anda..." required></textarea><br>
+    <button type="submit">Kirim</button>
+  </form>
+
+  <script>
+    function submitTestimoni(e) {
+      e.preventDefault();
+      const testimoni = {
+        nama: document.getElementById("nama").value,
+        isi: document.getElementById("isi").value
+      };
+      const data = JSON.parse(localStorage.getItem("testimoniPending") || "[]");
+      data.push(testimoni);
+      localStorage.setItem("testimoniPending", JSON.stringify(data));
+      alert("Testimoni berhasil dikirim. Terima kasih!");
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
