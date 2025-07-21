@@ -4,32 +4,127 @@
   <meta charset="UTF-8" />
   <title>Status Booking</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 600px; margin: auto; }
-    .card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-top: 2rem; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 2rem;
+      background: #fdfdfd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .top-left {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    .btn {
+      background-color: #005599;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      background-color: #003f7d;
+    }
+
+    #downloadBtn {
+      margin-top: 1rem;
+    }
+
+    #formCari {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    #formCari input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
+
+  <a href="index.html" class="btn top-left">⬅️ Beranda</a>
+
   <h2>Status Booking Anda</h2>
+
+  <form id="formCari">
+    <input type="text" id="inputID" placeholder="Masukkan ID Booking Anda" required>
+    <button type="submit" class="btn">🔍 Cek</button>
+  </form>
+
   <div id="hasil" class="card"></div>
+  <button id="downloadBtn" class="btn" style="display:none;">📄 Simpan Detail Booking ke File</button>
 
   <script>
+    const formCari = document.getElementById("formCari");
+    const inputID = document.getElementById("inputID");
+    const hasil = document.getElementById("hasil");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    formCari.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const id = inputID.value.trim();
+      if (id) {
+        window.location.href = `cek-status.html?id=${id}`;
+      }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
 
-    const bookings = JSON.parse(localStorage.getItem("bookingList") || "[]");
-    const data = bookings.find(b => b.id === id);
+    if (id) {
+      inputID.value = id;
+      const bookings = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      const data = bookings.find(b => b.id === id);
 
-    const hasil = document.getElementById("hasil");
-    if (data) {
-      hasil.innerHTML = `
-        <p><strong>ID:</strong> ${data.id}</p>
-        <p><strong>Nama:</strong> ${data.nama}</p>
-        <p><strong>Jenis:</strong> ${data.jenis}</p>
-        <p><strong>Tanggal:</strong> ${data.tanggal}</p>
-        <p><strong>Status:</strong> <strong style="color:${data.status === 'Selesai' ? 'green' : 'orange'}">${data.status}</strong></p>
-      `;
-    } else {
-      hasil.innerHTML = "<p>Data tidak ditemukan.</p>";
+      if (data) {
+        const statusHTML = `
+          <p><strong>ID:</strong> ${data.id}</p>
+          <p><strong>Nama:</strong> ${data.nama}</p>
+          <p><strong>Jenis:</strong> ${data.jenis}</p>
+          <p><strong>Tanggal:</strong> ${data.tanggal}</p>
+          <p><strong>Status:</strong> <strong style="color:${data.status === 'Selesai' ? 'green' : 'orange'}">${data.status}</strong></p>
+        `;
+        hasil.innerHTML = statusHTML;
+        downloadBtn.style.display = "inline-block";
+
+        downloadBtn.onclick = function () {
+          const content = `--- STATUS BOOKING ---\n` +
+            `ID         : ${data.id}\n` +
+            `Nama       : ${data.nama}\n` +
+            `Jenis      : ${data.jenis}\n` +
+            `Tanggal    : ${data.tanggal}\n` +
+            `Status     : ${data.status}`;
+          const blob = new Blob([content], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `booking-status-${data.id}.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+        };
+      } else {
+        hasil.innerHTML = "<p>Data tidak ditemukan. Pastikan ID Anda benar.</p>";
+      }
     }
   </script>
 </body>

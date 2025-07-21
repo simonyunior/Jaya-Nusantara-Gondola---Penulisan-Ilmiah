@@ -1,77 +1,146 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking Gondola - Jaya Nusantara Gondola</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking Gondola</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 700px; margin: auto; }
-    h1 { color: #003366; }
-    form { display: flex; flex-direction: column; gap: 1rem; }
-    label { font-weight: bold; }
-    input, select, textarea { padding: 0.5rem; font-size: 1rem; }
-    button { padding: 0.75rem; background-color: #005599; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
-    button:hover { background-color: #003366; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+    }
+    h1 {
+      color: #003366;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+    }
+    #top-left {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+    }
+    #downloadData {
+      margin-top: 2rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Form Pemesanan Gondola</h1>
-  <p>Silakan isi formulir di bawah ini untuk melakukan pemesanan gondola.</p>
+<div style="text-align: right; margin-bottom: 1rem;">
+  <a href="cek-status.html" style="background-color:#005599;color:#fff;padding:8px 16px;border-radius:5px;text-decoration:none;">
+    🔍 Cek Status Booking
+  </a>
+</div>
 
-  <form onsubmit="kirimBooking(event)">
-    <label for="nama">Nama Lengkap:</label>
-    <input type="text" id="nama" name="nama" required>
+  <div id="top-left">
+    <a href="index.html" style="text-decoration:none; font-weight:bold;">⬅️ Beranda</a>
+  </div>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-
-    <label for="telepon">Nomor Telepon:</label>
-    <input type="tel" id="telepon" name="telepon" required>
-
-    <label for="jenis">Jenis Gondola:</label>
-    <select id="jenis" name="jenis">
-      <option value="elektrik">Gondola Elektrik</option>
-      <option value="manual">Gondola Manual</option>
-      <option value="modular">Gondola Modular</option>
+  <h1>Form Booking Gondola</h1>
+  <div class="form-group">
+    <label>Nama</label>
+    <input type="text" id="nama">
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="email">
+  </div>
+  <div class="form-group">
+    <label>Telepon</label>
+    <input type="tel" id="telepon">
+  </div>
+  <div class="form-group">
+    <label>Jenis Gondola</label>
+    <select id="jenis">
+      <option value="Elektrik">Gondola Elektrik</option>
+      <option value="Manual">Gondola Manual</option>
+      <option value="Modular">Gondola Modular</option>
     </select>
+  </div>
+  <div class="form-group">
+    <label>Tanggal Booking</label>
+    <input type="date" id="tanggal">
+  </div>
+  <div class="form-group">
+    <label>Lokasi Proyek</label>
+    <input type="text" id="lokasi">
+  </div>
+  <div class="form-group">
+    <label>Catatan Tambahan</label>
+    <textarea id="catatan"></textarea>
+  </div>
 
-    <label for="tanggal">Tanggal Pemakaian:</label>
-    <input type="date" id="tanggal" name="tanggal" required>
+  <button onclick="submitBooking()">Kirim Booking</button>
+  <button id="downloadData" onclick="downloadBookingData()">📁 Backup Booking</button>
 
-    <label for="lokasi">Lokasi Proyek:</label>
-    <input type="text" id="lokasi" name="lokasi" required>
-
-    <label for="catatan">Catatan Tambahan:</label>
-    <textarea id="catatan" name="catatan" rows="4"></textarea>
-
-    <button type="submit">Kirim Pemesanan</button>
-  </form>
   <script>
-function kirimBooking(e) {
-  e.preventDefault();
+    function submitBooking() {
+      const nama = document.getElementById("nama").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const telepon = document.getElementById("telepon").value.trim();
+      const jenis = document.getElementById("jenis").value;
+      const tanggal = document.getElementById("tanggal").value;
+      const lokasi = document.getElementById("lokasi").value.trim();
+      const catatan = document.getElementById("catatan").value.trim();
 
-  const bookingId = "BOOK" + Date.now();
-  const booking = {
-    id: bookingId,
-    nama: document.getElementById("nama").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    telepon: document.getElementById("telepon").value.trim(),
-    jenis: document.getElementById("jenis").value,
-    tanggal: document.getElementById("tanggal").value,
-    lokasi: document.getElementById("lokasi").value.trim(),
-    catatan: document.getElementById("catatan").value.trim(),
-    status: "Menunggu"
-  };
+      if (!nama || !email || !telepon || !jenis || !tanggal || !lokasi) {
+        alert("Mohon lengkapi semua field.");
+        return;
+      }
 
-  let bookings = JSON.parse(localStorage.getItem("bookingList") || "[]");
-  bookings.push(booking);
-  localStorage.setItem("bookingList", JSON.stringify(bookings));
+      const bookingId = "BOOK" + Date.now();
 
-  alert("Booking berhasil!\nID Anda: " + bookingId);
-  window.location.href = `cek-status.html?id=${bookingId}`;
-}
+      const booking = {
+        id: bookingId,
+        nama,
+        email,
+        telepon,
+        jenis,
+        tanggal,
+        lokasi,
+        catatan,
+        status: "Menunggu"
+      };
 
-</script>
+      let bookings = JSON.parse(localStorage.getItem("bookingList") || "[]");
+      bookings.push(booking);
+      localStorage.setItem("bookingList", JSON.stringify(bookings));
 
+      alert("Booking berhasil!\nID Anda: " + bookingId);
+      window.location.href = "cek-status.html?id=" + bookingId;
+    }
+
+    function downloadBookingData() {
+      const data = localStorage.getItem("bookingList") || "[]";
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "booking-data.json";
+      a.click();
+    }
+  </script>
 </body>
 </html>
